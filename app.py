@@ -11,7 +11,7 @@ repo_id = "ENDPOINT_URL"
 llm_client = InferenceClient(
     model= repo_id,
     timeout=120,
-    token = "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"
+    token = "HUGGING_TOKEN"
 )
 
 def call_llm(inference_client: InferenceClient, prompt: str):
