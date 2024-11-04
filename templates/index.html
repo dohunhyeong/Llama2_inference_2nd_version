@@ -8,10 +8,47 @@
 </head>
 <body>
     <h1>Chat with Llama</h1>
+    
     <div id="chatbox"></div>
+    
     <input type="text" id="user-input" placeholder="Type your question here">
     <button id="send-button">Send</button>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    
+    <script>
+        document.getElementById('send-button').addEventListener('click', function() {
+            const userInput = document.getElementById('user-input').value;
+            
+            if (userInput.trim() === "") return;
+            
+            // 사용자 입력 표시
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML += `<p>You: ${userInput}</p>`;
+            
+            // 서버로 질문 보내기
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.response) {
+                    // 봇 응답을 HTML 형식으로 추가
+                    chatbox.innerHTML += `<p>Bot: ${data.response}</p>`;
+                } else if (data.error) {
+                    chatbox.innerHTML += `<p>Bot: ${data.error}</p>`;
+                }
+            })
+            .catch(error => {
+                chatbox.innerHTML += `<p>Bot: Error occurred: ${error}</p>`;
+            });
+            
+            document.getElementById('user-input').value = ""; // 입력창 비우기
+        });
+    </script>
 </body>
 </html>

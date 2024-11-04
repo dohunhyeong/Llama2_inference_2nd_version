@@ -6,12 +6,12 @@ import time
 app = Flask(__name__)
 
 # Hugging Face Inference Client 설정
-repo_id = "dohun123/llama2-3b-10epoch"
+repo_id = "ENDPOINT_URL"
 
 llm_client = InferenceClient(
-    model=repo_id,
+    model= repo_id,
     timeout=120,
-    token = "MY_HF_TOKEN_KEY"
+    token = "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"
 )
 
 def call_llm(inference_client: InferenceClient, prompt: str):
@@ -23,8 +23,9 @@ def call_llm(inference_client: InferenceClient, prompt: str):
             "task": "text-generation",
         },
     )
-    print(response)
-    return json.loads(response.decode())[0]["generated_text"]
+    response_data  = response.json()
+    print(response_data)
+    return response_data[0]['generated_text']
 
 @app.route("/")
 def index():
